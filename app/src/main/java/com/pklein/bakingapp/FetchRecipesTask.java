@@ -15,7 +15,7 @@ import java.util.List;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
-/**
+/*
  * Help from http://www.jameselsey.co.uk/blogs/techblog/extracting-out-your-asynctasks-into-separate-classes-makes-your-code-cleaner/
  */
 

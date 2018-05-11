@@ -51,16 +51,13 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
         }
     }
 
-    public void onStepSelected(step StepSelected) {
+    public void onStepSelected(int StepId) {
 
         if(!mTwoPane) {
-            Log.i(TAG, "OK " + StepSelected.getmShortDescription());
             Intent startChildActivityIntent = new Intent(this, OneRecipeStepActivity.class);
-            if (StepSelected != null) {
-                startChildActivityIntent.putExtra("Step", StepSelected);
-                startChildActivityIntent.putExtra("Name", mRecipeName);
-                Log.i(TAG, "NAME  :"+mRecipeName);
-            }
+            startChildActivityIntent.putExtra("StepId", StepId);
+            startChildActivityIntent.putExtra("Recipe", mrecipe);
+            Log.i(TAG, "NAME  :"+mRecipeName);
             this.startActivity(startChildActivityIntent);
         }
     }
@@ -68,7 +65,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-       // outState.putParcelable(RECYCLER_STATE,mLayoutManager.onSaveInstanceState());
+        // outState.putParcelable(RECYCLER_STATE,mLayoutManager.onSaveInstanceState());
     }
 
     @Override

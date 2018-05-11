@@ -24,7 +24,7 @@ public class StepsListAdapter  extends RecyclerView.Adapter<StepsListAdapter.Ste
 
     //To create the Listener : with the Help of this documentation  :https://gist.github.com/riyazMuhammad/1c7b1f9fa3065aa5a46f
     public interface CustomStepClickListener {
-        public void onItemClick(View v, step StepSelected);
+        public void onItemClick(View v, int StepId);
     }
 
     public StepsListAdapter() {}
@@ -62,12 +62,12 @@ public class StepsListAdapter  extends RecyclerView.Adapter<StepsListAdapter.Ste
         final step StepSelected = mStepsData.get(position);
 
         StepsListAdapterViewHolder.stepNameTv.setText(StepSelected.getmShortDescription());
-       // StepsListAdapterViewHolder.stepNameTv.setPaintFlags(StepsListAdapterViewHolder.stepNameTv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        // StepsListAdapterViewHolder.stepNameTv.setPaintFlags(StepsListAdapterViewHolder.stepNameTv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         StepsListAdapterViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               listener.onItemClick(v, StepSelected);
+                listener.onItemClick(v, StepSelected.getmId());
             }
         });
     }

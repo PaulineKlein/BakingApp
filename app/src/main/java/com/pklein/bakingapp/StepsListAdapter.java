@@ -24,7 +24,7 @@ public class StepsListAdapter  extends RecyclerView.Adapter<StepsListAdapter.Ste
 
     //To create the Listener : with the Help of this documentation  :https://gist.github.com/riyazMuhammad/1c7b1f9fa3065aa5a46f
     public interface CustomStepClickListener {
-        public void onItemClick(View v, int StepId);
+        public void onItemClick(View v, int StepPos);
     }
 
     public StepsListAdapter() {}
@@ -67,7 +67,7 @@ public class StepsListAdapter  extends RecyclerView.Adapter<StepsListAdapter.Ste
         StepsListAdapterViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(v, StepSelected.getmId());
+                listener.onItemClick(v, StepSelected.getmPos());
             }
         });
     }

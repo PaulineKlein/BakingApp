@@ -10,12 +10,53 @@
     This layout is a two-pane layout for the master/detail flow.
     -->
 
-    <!-- The static MasterListFragment -->
-    <fragment
-        android:id="@+id/master_list_fragment"
-        android:name="com.pklein.bakingapp.AllRecipeStepsFragment"
+    <!-- The static All_steps_Fragment -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="400dp"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/tv_ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:padding="15dp"
+                android:text="@string/ingredients"
+                android:textSize="20sp"
+                android:textColor="@color/colorAccentDark" />
+
+            <include layout="@layout/ingredient_card"/>
+
+            <TextView
+                android:id="@+id/tv_steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:padding="15dp"
+                android:text="@string/steps"
+                android:textSize="20sp"
+                android:textColor="@color/colorAccentDark" />
+            <!-- A small divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray" />
+            <fragment
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/master_list_fragment"
+                android:name="com.pklein.bakingapp.AllRecipeStepsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout></ScrollView>
 
     <!-- A small divider -->
     <View
@@ -23,37 +64,15 @@
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray" />
 
-    <!-- LinearLayout that arranges all three Android-Me body part images vertically -->
+    <!-- LinearLayout that arranges activity_one_recipe_step LAYOUT -->
     <LinearLayout
-        android:id="@+id/android_me_linear_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="@android:color/white"
-        android:orientation="vertical"
+        android:id="@+id/twoPane_one_recipe_step_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         >
 
-        <!-- Three vertically arranged body part fragments - the frame layouts are containers -
-        one for each Android-Me part (head, body, legs) -->
-
-        <FrameLayout
-            android:id="@+id/head_container"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerInside"/>
-
-        <FrameLayout
-            android:id="@+id/body_container"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerInside"/>
-
-        <FrameLayout
-            android:id="@+id/leg_container"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerInside"/>
-
+        <!-- activity_one_recipe_step LAYOUT -->
+        <include layout="@layout/activity_one_recipe_step"/>
 
     </LinearLayout>
 

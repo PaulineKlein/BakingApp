@@ -38,7 +38,7 @@ public class AllRecipeStepsFragment extends Fragment {
 
     // interface, calls a method in AllRecipeStepsActivity named onStepSelected
     public interface OnStepClickListener {
-        void onStepSelected(int StepId);
+        void onStepSelected(int StepPos);
     }
 
     // Override onAttach to make sure that the container activity has implemented the callback
@@ -66,9 +66,9 @@ public class AllRecipeStepsFragment extends Fragment {
 
         mStepsListAdapter = new StepsListAdapter(new StepsListAdapter.CustomStepClickListener() {
             @Override
-            public void onItemClick(View v, int StepId) {
-                Log.d(TAG, "clicked position:" + StepId);
-                mCallback.onStepSelected(StepId);
+            public void onItemClick(View v, int StepPos) {
+                Log.d(TAG, "clicked position:" + StepPos);
+                mCallback.onStepSelected(StepPos);
             }
         });
         mRecyclerView.setAdapter(mStepsListAdapter);

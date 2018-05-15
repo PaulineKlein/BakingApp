@@ -13,6 +13,7 @@ import java.util.List;
 public class recipe implements Parcelable {
 
     private static final String TAG = recipe.class.getSimpleName();
+    private int mPos;
     private int mId;
     private String mName;
     private int mServings;
@@ -25,7 +26,8 @@ public class recipe implements Parcelable {
         mStep = new ArrayList<step>();
     }
 
-    public recipe(int mId, String mName, int mServings, String mImage, List<ingredient> mIngredients, List<step> mStep) {
+    public recipe(int mPos, int mId, String mName, int mServings, String mImage, List<ingredient> mIngredients, List<step> mStep) {
+        this.mPos = mPos;
         this.mId = mId;
         this.mName = mName;
         this.mServings = mServings;
@@ -38,6 +40,7 @@ public class recipe implements Parcelable {
 
         this();
 
+        mPos = in.readInt();
         mId = in.readInt();
         mServings = in.readInt();
         mName = in.readString();
@@ -54,6 +57,7 @@ public class recipe implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mPos);
         dest.writeInt(mId);
         dest.writeInt(mServings);
         dest.writeString(mName);
@@ -74,10 +78,16 @@ public class recipe implements Parcelable {
 
     /* GETTER and SETTER */
 
+    public int getmPos() {
+        return mPos;
+    }
+    public void setmPos(int mPos) {
+        this.mPos = mPos;
+    }
+
     public int getmId() {
         return mId;
     }
-
     public void setmId(int mId) {
         this.mId = mId;
     }
@@ -85,7 +95,6 @@ public class recipe implements Parcelable {
     public String getmName() {
         return mName;
     }
-
     public void setmName(String mName) {
         this.mName = mName;
     }
@@ -93,7 +102,6 @@ public class recipe implements Parcelable {
     public int getmServings() {
         return mServings;
     }
-
     public void setmServings(int mServings) {
         this.mServings = mServings;
     }
@@ -101,7 +109,6 @@ public class recipe implements Parcelable {
     public String getmImage() {
         return mImage;
     }
-
     public void setmImage(String mImage) {
         this.mImage = mImage;
     }
@@ -109,7 +116,6 @@ public class recipe implements Parcelable {
     public List<ingredient> getmIngredients() {
         return mIngredients;
     }
-
     public void setmIngredients(List<ingredient> mIngredients) {
         this.mIngredients = mIngredients;
     }
@@ -117,7 +123,6 @@ public class recipe implements Parcelable {
     public List<step> getmStep() {
         return mStep;
     }
-
     public void setmStep(List<step> mStep) {
         this.mStep = mStep;
     }

@@ -40,12 +40,6 @@ public class FetchRecipesTask extends AsyncTask<String, Void,List<recipe>> {
     @Override
     protected List<recipe> doInBackground(String... params) {
 
-        /* If there's no filter, there's nothing to look up.
-        if (params.length == 0) {
-            return null;
-        }
-         String filter = params[0];*/
-
         // if there is no internet connection show error message
         if(!NetworkUtils.isconnected((ConnectivityManager)context.getSystemService(CONNECTIVITY_SERVICE)))
         {

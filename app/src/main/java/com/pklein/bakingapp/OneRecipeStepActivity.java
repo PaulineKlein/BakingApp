@@ -1,11 +1,14 @@
 package com.pklein.bakingapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +55,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     private PlaybackStateCompat.Builder mStateBuilder;
 
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.card_view)   CardView mCard_view;
     @BindView(R.id.tv_step_desc)   TextView mtvTextDesc;
     @BindView(R.id.buttonPrevious)    Button mButtonPrevious;
     @BindView(R.id.buttonHome) Button mButtonHome;
@@ -67,8 +71,8 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
 
         Intent intentThatStarted = this.getIntent();
 
-        if(intentThatStarted.hasExtra("StepId")) {
-            mstepId = intentThatStarted.getIntExtra("StepId",0);
+        if(intentThatStarted.hasExtra("StepPos")) {
+            mstepId = intentThatStarted.getIntExtra("StepPos",0);
 
             if(intentThatStarted.hasExtra("Recipe")) {
                 mrecipe = intentThatStarted.getExtras().getParcelable("Recipe");
@@ -82,25 +86,22 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                     initializePlayer(NetworkUtils.getvideoURI(mstep.getmVideoURL()));
 
                 }else{
+                    mPlayerView.setVisibility(View.INVISIBLE);
+                    mReplaceVideoImageIv.setVisibility(View.VISIBLE);
+
+                    String img = "";
                     if(!mstep.getmThumbnailURL().equals("")) {
-                        initializeMediaSession(); // Initialize the Media Session.
-                        initializePlayer(NetworkUtils.getvideoURI(mstep.getmThumbnailURL()));
+                        img=mstep.getmThumbnailURL();
                     }
-                    else{
-                        mPlayerView.setVisibility(View.INVISIBLE);
-                        mReplaceVideoImageIv.setVisibility(View.VISIBLE);
-
-                        String img = "R.drawable.cooking";
-                        if(!mrecipe.getmImage().equals(""))
-                        {
-                            img = mrecipe.getmImage();
-                        }
-
-                        Picasso.with(this)
-                                .load(img)
-                                .error(R.drawable.cooking)
-                                .into(mReplaceVideoImageIv);
+                    else if(!mrecipe.getmImage().equals(""))
+                    {
+                        img = mrecipe.getmImage();
                     }
+
+                    Picasso.with(this)
+                            .load(NetworkUtils.getvideoURI(img))
+                            .error(R.drawable.cooking)
+                            .into(mReplaceVideoImageIv);
                 }
 
                 //button to go to previous step : (if it is the first step, then Hide button)
@@ -133,6 +134,18 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     }
 
     /**
+     * For landscape View : hide evereything except ExoPlayer
+     */
+    private void setAllInvisible(){
+        mButtonNext.setVisibility(View.INVISIBLE);
+        mButtonPrevious.setVisibility(View.INVISIBLE);
+        mButtonHome.setVisibility(View.INVISIBLE);
+        mReplaceVideoImageIv.setVisibility(View.INVISIBLE);
+        mCard_view.setVisibility(View.INVISIBLE);
+    }
+
+
+    /**
      * Initialize ExoPlayer.
      * @param mediaUri The URI of the sample to play.
      */
@@ -143,6 +156,15 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
+
+            //check for landscape : (with the help of : https://stackoverflow.com/questions/46713761/how-to-play-video-full-screen-in-landscape-using-exoplayer)
+            if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mPlayerView.getLayoutParams();
+                params.width = params.MATCH_PARENT;
+                params.height = params.MATCH_PARENT;
+                mPlayerView.setLayoutParams(params);
+                setAllInvisible();
+            }
 
             // Set the ExoPlayer.EventListener to this activity.
             mExoPlayer.addListener(this);

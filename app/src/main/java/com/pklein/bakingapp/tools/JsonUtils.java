@@ -56,6 +56,7 @@ public class JsonUtils {
 
             Log.i(TAG, "JSON_NAME "+BakingJsonobj.optString(JSON_NAME));
 
+            rec.setmPos(i);
             if(BakingJsonobj.has(JSON_ID)){ rec.setmId(BakingJsonobj.optInt(JSON_ID));}
             if(BakingJsonobj.has(JSON_NAME)){ rec.setmName(BakingJsonobj.optString(JSON_NAME));}
             if(BakingJsonobj.has(JSON_SERVINGS)){ rec.setmServings(BakingJsonobj.optInt(JSON_SERVINGS));}
@@ -84,6 +85,7 @@ public class JsonUtils {
                 for (int k = 0; k < ListstepsJson.length(); k++) {
                     JSONObject Stepsobj = ListstepsJson.getJSONObject(k);
                     step step = new step();
+                    step.setmPos(k);
                     if(Stepsobj.has(JSON_ID)){ step.setmId(Stepsobj.optInt(JSON_ID));}
                     if(Stepsobj.has(JSON_SHORTDESC)){ step.setmShortDescription(Stepsobj.optString(JSON_SHORTDESC));}
                     if(Stepsobj.has(JSON_DESC)){ step.setmDescription(Stepsobj.optString(JSON_DESC));}

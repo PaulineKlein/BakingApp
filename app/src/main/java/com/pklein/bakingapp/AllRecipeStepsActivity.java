@@ -48,18 +48,20 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     private boolean mTwoPane; // A single-pane display refers to phone screens, and two-pane to larger tablet screens
     private String mRecipeName;
     private recipe mrecipe;
+
     // Initialize the player :
     private SimpleExoPlayer mExoPlayer;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
+    private SimpleExoPlayerView mPlayerView;
+    private  TextView mtvTextDesc;
+    private  ImageView mReplaceVideoImageIv;
 
-    private Parcelable mSavedRecyclerViewState;
-    private static final String RECYCLER_STATE = "recycler";
+    private int mSavedPosState = 0;
+    private static final String LIFECYCLE_STEP_POS = "Step_Pos";
 
     @BindView(R.id.tv_ingredient_name)    TextView mingredientNameTV;
-    @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
-    @BindView(R.id.tv_step_desc)   TextView mtvTextDesc;
-    @BindView(R.id.image_iv_replaceVideo)    ImageView mReplaceVideoImageIv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +84,13 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
 
             mingredientNameTV.setText(Html.fromHtml(ingredients));
 
-
             // Determine if you're creating a two-pane or single-pane display
             if(findViewById(R.id.twoPane_one_recipe_step_linear_layout) != null) {
                 mTwoPane = true;
+
+                mPlayerView = (SimpleExoPlayerView)findViewById(R.id.playerView);
+                mtvTextDesc = (TextView)findViewById(R.id.tv_step_desc);
+                mReplaceVideoImageIv = (ImageView)findViewById(R.id.image_iv_replaceVideo);
 
                 // Getting rid of the button that appears on phones for launching separate activities
                 Button buttonPrevious = (Button) findViewById(R.id.buttonPrevious);
@@ -97,8 +102,14 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
 
                 if(savedInstanceState == null) {
                     initializeStepView(0);
-                    }
                 }
+                else{
+                    if (savedInstanceState.containsKey(LIFECYCLE_STEP_POS)) {
+                        mSavedPosState = savedInstanceState.getInt(LIFECYCLE_STEP_POS);
+                    }
+                    initializeStepView(mSavedPosState);
+                }
+            }
             else {
                 mTwoPane = false;
             }
@@ -120,7 +131,9 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     }
 
     private void initializeStepView(int stepId) {
+        mSavedPosState = stepId;
         mtvTextDesc.setText(mrecipe.getmStep().get(stepId).getmDescription());
+        mtvTextDesc.setTextSize(25);
         if (!mrecipe.getmStep().get(stepId).getmVideoURL().equals("")) {
             mReplaceVideoImageIv.setVisibility(View.INVISIBLE);
             mPlayerView.setVisibility(View.VISIBLE);
@@ -148,16 +161,12 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // outState.putParcelable(RECYCLER_STATE,mLayoutManager.onSaveInstanceState());
+        outState.putInt(LIFECYCLE_STEP_POS, mSavedPosState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //It will restore recycler view at same position
-     /*   if (savedInstanceState != null) {
-            mSavedRecyclerViewState = savedInstanceState.getParcelable(RECYCLER_STATE);
-        }*/
     }
 
     /**

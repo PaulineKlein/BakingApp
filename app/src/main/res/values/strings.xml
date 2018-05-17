@@ -4,6 +4,10 @@
     <string name="title_AllRecipeStepsActivity">Recipe Steps</string>
     <string name="title_OneRecipeStepActivity">Recipe Step</string>
 
+    <string name="title_menu">Set Widget</string>
+    <string name="title_menu_Category">Preferences</string>
+    <string name="title_menu_pref">Select a Recipe</string>
+
     <string name="ProgressBar_content_description">ProgressBar for loading Recipes</string>
     <string name="error_message"> An error has occurred. Please check your Internet Connection.</string>
     <string name="ingredients">Ingredients :</string>

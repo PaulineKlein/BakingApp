@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/mainActivity_name"
@@ -32,8 +31,16 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <activity android:name=".OneRecipeStepActivity"
-            android:label="@string/title_OneRecipeStepActivity">
+        <activity
+            android:name=".OneRecipeStepActivity"
+            android:label="@string/title_OneRecipeStepActivity"></activity>
+
+        <activity android:name=".settings.SettingsActivity"
+            android:label="@string/title_menu_Category"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 

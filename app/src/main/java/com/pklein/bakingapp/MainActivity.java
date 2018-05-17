@@ -1,17 +1,25 @@
 package com.pklein.bakingapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pklein.bakingapp.data.ingredient;
 import com.pklein.bakingapp.data.recipe;
+import com.pklein.bakingapp.settings.SettingsActivity;
 
 import java.util.List;
 
@@ -57,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (recipesData != null) {
+                mListRecipe = recipesData;
                 // if a scroll position is saved, read it.
                 if(mSavedRecyclerViewState!=null) {
                     mLayoutManager.onRestoreInstanceState(mSavedRecyclerViewState);
@@ -130,6 +139,50 @@ public class MainActivity extends AppCompatActivity {
             return 1;
         }
 
+    }
+
+
+    /**
+     * Methods for setting up the menu
+     **/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.widget_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+
+            CharSequence entries[] = new String[mListRecipe.size()];
+            CharSequence entryValues[] = new String[mListRecipe.size()];
+            int i = 0;
+            for (recipe rec : mListRecipe) {
+                entries[i] = rec.getmName();
+
+                ingredient ing=rec.getmIngredients().get(0);
+                String ingredients="<b>"+ing.getmQuantity()+" "+ ing.getmMeasure()+"</b> "+ing.getmIngredient();
+
+                for (int j = 1; j < rec.getmIngredients().size (); j++)
+                {
+                    ing = rec.getmIngredients().get(j);
+                    ingredients=ingredients+"<br/><b>"+ing.getmQuantity()+" "+ ing.getmMeasure()+"</b> "+ing.getmIngredient();
+                }
+                entryValues[i] = ingredients;
+
+                i++;
+            }
+
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startSettingsActivity.putExtra("entries", entries);
+            startSettingsActivity.putExtra("entryValues", entryValues);
+            startActivity(startSettingsActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

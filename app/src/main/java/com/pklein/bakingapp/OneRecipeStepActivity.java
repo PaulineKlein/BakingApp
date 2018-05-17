@@ -306,7 +306,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                 if(mrecipe != null)
                 {
                     int StepId = mstepId -1;
-                    startChildActivityIntent.putExtra("StepId", StepId);
+                    startChildActivityIntent.putExtra("StepPos", StepId);
                     startChildActivityIntent.putExtra("Recipe", mrecipe);
                 }
                 releasePlayer();
@@ -319,7 +319,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                 if(mrecipe != null)
                 {
                     int StepId = mstepId +1;
-                    startChildActivityIntent.putExtra("StepId", StepId);
+                    startChildActivityIntent.putExtra("StepPos", StepId);
                     startChildActivityIntent.putExtra("Recipe", mrecipe);
                 }
                 releasePlayer();

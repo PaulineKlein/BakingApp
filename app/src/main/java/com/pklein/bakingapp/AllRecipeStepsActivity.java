@@ -1,14 +1,11 @@
 package com.pklein.bakingapp;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Parcelable;
-import android.support.constraint.ConstraintLayout;
+import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +32,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.pklein.bakingapp.data.ingredient;
 import com.pklein.bakingapp.data.recipe;
-import com.pklein.bakingapp.data.step;
 import com.pklein.bakingapp.tools.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -289,6 +285,11 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
         releasePlayer();
     }
 
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        if(mExoPlayer!=null) {mExoPlayer.stop();}
+    }
 
     private void releasePlayer() {
         if(mExoPlayer!=null) {

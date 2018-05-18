@@ -273,6 +273,11 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
         super.onDestroy();
         releasePlayer();
     }
+    @Override
+    protected  void onPause(){
+        super.onPause();
+        if(mExoPlayer!=null) {mExoPlayer.stop();}
+    }
 
 
     private void releasePlayer() {

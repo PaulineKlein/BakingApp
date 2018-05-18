@@ -23,13 +23,15 @@
     android:orientation="vertical"
     android:background="@drawable/shape">
 
-    <TextView
-        android:id="@+id/widget_recipe_TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal"
-        android:textSize="12sp"
-        tools:text="@string/ingredient_card" />
+        <TextView
+            android:id="@+id/widget_recipe_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:textColor="#FFFFFF"
+            tools:text="@string/ingredient_card" />
 
 </LinearLayout>

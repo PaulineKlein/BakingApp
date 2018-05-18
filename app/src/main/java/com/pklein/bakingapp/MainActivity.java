@@ -3,6 +3,10 @@ package com.pklein.bakingapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import com.pklein.bakingapp.data.ingredient;
 import com.pklein.bakingapp.data.recipe;
 import com.pklein.bakingapp.settings.SettingsActivity;
+import com.pklein.bakingapp.tools.SimpleIdlingResource;
 
 import java.util.List;
 
@@ -38,6 +43,18 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mLayoutManager;
     private List<recipe> mListRecipe;
 
+    // Only called FROM Tests : null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +69,20 @@ public class MainActivity extends AppCompatActivity {
         mRecipesListAdapter = new RecipesListAdapter();
         mRecyclerView.setAdapter(mRecipesListAdapter);
 
+        // Get the IdlingResource instance
+        getIdlingResource();
+    }
+
+    /**
+     * Call loadRecipeData() from onStart instead of onCreate to ensure there is enougth time to register IdlingResource if the download is done too early
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadRecipeData();
     }
+
+
 
     public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<List<recipe>>
     {

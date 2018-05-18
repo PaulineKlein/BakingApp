@@ -21,44 +21,36 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,int appWidgetId) {
 
         Log.i(TAG, "BEGIN updateAppWidget : ");
-        // Create an Intent to launch MainActivity when clicked
+
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_recipe_TV, pendingIntent);
 
-        //set the Text of SharedPreferences :
+        //Text of SharedPreferences :
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         views.setTextViewText(R.id.widget_recipe_TV, Html.fromHtml(sharedPreferences.getString("menu_key","Baking App")));
 
         Log.e(TAG, sharedPreferences.getString("menu_key","Baking App"));
 
-        // Instruct the widget manager to update the widget
+        //update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        // update all Widget :
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        // Perform any action when one or more AppWidget instances have been deleted
-    }
+    public void onDeleted(Context context, int[] appWidgetIds) { }
 
     @Override
-    public void onEnabled(Context context) {
-        // Perform any action when an AppWidget for this provider is instantiated
-    }
+    public void onEnabled(Context context) { }
 
     @Override
-    public void onDisabled(Context context) {
-        // Perform any action when the last AppWidget instance for this provider is deleted
-    }
+    public void onDisabled(Context context) { }
 }

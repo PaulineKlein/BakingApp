@@ -56,7 +56,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     private int mSavedPosState = 0;
     private static final String LIFECYCLE_STEP_POS = "Step_Pos";
 
-    @BindView(R.id.tv_ingredient_name)    TextView mingredientNameTV;
+    @BindView(R.id.tv_ingredient_name) TextView mingredientNameTV;
 
 
     @Override
@@ -69,6 +69,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
             mrecipe = getIntent().getExtras().getParcelable("Recipe");
             mRecipeName = mrecipe.getmName();
 
+            //display ingredients :
             ingredient ing=mrecipe.getmIngredients().get(0);
             String ingredients="<b>"+ing.getmQuantity()+" "+ ing.getmMeasure()+"</b> "+ing.getmIngredient();
 
@@ -106,7 +107,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
                     initializeStepView(mSavedPosState);
                 }
             }
-            else {
+            else { // a phone and not a tablet :
                 mTwoPane = false;
             }
         }
@@ -189,21 +190,14 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     }
 
     /**
-     * Initializes the Media Session to be enabled with media buttons, transport controls, callbacks
-     * and media controller.
+     * Initializes the Media Session
      */
     private void initializeMediaSession() {
 
-        // Create a MediaSessionCompat.
         mMediaSession = new MediaSessionCompat(this, TAG);
-
-        // Enable callbacks from MediaButtons and TransportControls.
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible.
         mMediaSession.setMediaButtonReceiver(null);
 
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
         mStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(
                         PlaybackStateCompat.ACTION_PLAY |
@@ -212,11 +206,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE);
 
         mMediaSession.setPlaybackState(mStateBuilder.build());
-
-        // MySessionCallback has methods that handle callbacks from a media controller.
         mMediaSession.setCallback(new AllRecipeStepsActivity.MySessionCallback());
-
-        // Start the Media Session since the activity is active.
         mMediaSession.setActive(true);
     }
 
@@ -237,11 +227,9 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     public void onPositionDiscontinuity() {}
 
     /**
-     * Method that is called when the ExoPlayer state changes. Used to update the MediaSession
-     * PlayBackState to keep in sync.
+     * Method that is called when the ExoPlayer state changes.
      * @param playWhenReady true if ExoPlayer is playing, false if it's paused.
-     * @param playbackState int describing the state of ExoPlayer. Can be STATE_READY, STATE_IDLE,
-     *                      STATE_BUFFERING, or STATE_ENDED.
+     * @param playbackState int describing the state of ExoPlayer.
      */
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {

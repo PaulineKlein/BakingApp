@@ -19,4 +19,10 @@
     <string name="quantity">Quantity</string>
     <string name="recipe_picture_content_description">Image corresponding to the Recipe Card</string>
     <string name="play_picture_content_description">Image of a play lecture video</string>
+
+    <string name="button_Home">Home</string>
+    <string name="button_Next">Next</string>
+    <string name="button_Previous">Previous</string>
+
+
 </resources>

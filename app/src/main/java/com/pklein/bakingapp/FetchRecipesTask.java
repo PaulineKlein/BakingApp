@@ -3,8 +3,6 @@ package com.pklein.bakingapp;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.support.v7.widget.GridLayoutManager;
-import android.view.View;
 
 import com.pklein.bakingapp.data.recipe;
 import com.pklein.bakingapp.tools.JsonUtils;
@@ -18,7 +16,6 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 /*
  * Help from http://www.jameselsey.co.uk/blogs/techblog/extracting-out-your-asynctasks-into-separate-classes-makes-your-code-cleaner/
  */
-
 public class FetchRecipesTask extends AsyncTask<String, Void,List<recipe>> {
     private static final String TAG = "FetchRecipesTask";
 

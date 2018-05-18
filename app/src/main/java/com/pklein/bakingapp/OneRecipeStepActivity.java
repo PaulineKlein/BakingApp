@@ -109,7 +109,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                 Log.i(TAG, "mstepId : "+mstepId+" and size :"+size);
                 if(mstepId>0){
                     mButtonPrevious.setOnClickListener(this);
-                    mButtonPrevious.setText("Previous");
+                    mButtonPrevious.setText(getString(R.string.button_Previous));
                 }
                 else{
                     mButtonPrevious.setVisibility(View.INVISIBLE);
@@ -118,7 +118,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                 // button to go to next step (if it is the last step, then Hide button)
                 if(mstepId<size){
                     mButtonNext.setOnClickListener(this);
-                    mButtonNext.setText("Next");
+                    mButtonNext.setText(getString(R.string.button_Next));
                 }
                 else{
                     mButtonNext.setVisibility(View.INVISIBLE);
@@ -126,7 +126,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
 
                 //button to return to Steps selection (AllRecipeStepsActivity)
                 mButtonHome.setOnClickListener(this);
-                mButtonHome.setText("Home");
+                mButtonHome.setText(getString(R.string.button_Home));
 
             }
         }
@@ -178,21 +178,14 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     }
 
     /**
-     * Initializes the Media Session to be enabled with media buttons, transport controls, callbacks
-     * and media controller.
+     * Initializes the Media Session
      */
     private void initializeMediaSession() {
 
-        // Create a MediaSessionCompat.
         mMediaSession = new MediaSessionCompat(this, TAG);
-
-        // Enable callbacks from MediaButtons and TransportControls.
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible.
         mMediaSession.setMediaButtonReceiver(null);
 
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
         mStateBuilder = new PlaybackStateCompat.Builder()
                 .setActions(
                         PlaybackStateCompat.ACTION_PLAY |
@@ -201,11 +194,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                                 PlaybackStateCompat.ACTION_PLAY_PAUSE);
 
         mMediaSession.setPlaybackState(mStateBuilder.build());
-
-        // MySessionCallback has methods that handle callbacks from a media controller.
         mMediaSession.setCallback(new MySessionCallback());
-
-        // Start the Media Session since the activity is active.
         mMediaSession.setActive(true);
     }
 
@@ -226,8 +215,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     public void onPositionDiscontinuity() {}
 
     /**
-     * Method that is called when the ExoPlayer state changes. Used to update the MediaSession
-     * PlayBackState to keep in sync.
+     * Method that is called when the ExoPlayer state changes.
      * @param playWhenReady true if ExoPlayer is playing, false if it's paused.
      * @param playbackState int describing the state of ExoPlayer. Can be STATE_READY, STATE_IDLE,
      *                      STATE_BUFFERING, or STATE_ENDED.

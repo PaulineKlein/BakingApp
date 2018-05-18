@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public class FetchMyDataTaskCompleteListener implements AsyncTaskCompleteListener<List<recipe>>
     {
         @Override
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         new FetchRecipesTask(this, new FetchMyDataTaskCompleteListener()).execute();
     }
 
-
+    // SHOW VIEWS OR NOT :
     private void showRecipeListView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -210,5 +209,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

@@ -10,14 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.pklein.bakingapp.data.ingredient;
 import com.pklein.bakingapp.data.recipe;
-import com.pklein.bakingapp.data.step;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

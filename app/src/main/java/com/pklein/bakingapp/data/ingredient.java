@@ -1,6 +1,5 @@
 package com.pklein.bakingapp.data;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,8 +9,7 @@ public class ingredient implements Parcelable {
     private String mMeasure;
     private String mIngredient;
 
-    public ingredient(){
-    }
+    public ingredient(){ }
 
     public ingredient(String mQuantity, String mMeasure, String mIngredient) {
         this.mQuantity = mQuantity;

@@ -1,7 +1,6 @@
 package com.pklein.bakingapp;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import com.pklein.bakingapp.data.step;
 
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -62,7 +62,6 @@ public class StepsListAdapter  extends RecyclerView.Adapter<StepsListAdapter.Ste
         final step StepSelected = mStepsData.get(position);
 
         StepsListAdapterViewHolder.stepNameTv.setText(StepSelected.getmShortDescription());
-        // StepsListAdapterViewHolder.stepNameTv.setPaintFlags(StepsListAdapterViewHolder.stepNameTv.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         StepsListAdapterViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

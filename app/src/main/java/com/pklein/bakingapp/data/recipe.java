@@ -1,11 +1,7 @@
 package com.pklein.bakingapp.data;
 
-
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import com.pklein.bakingapp.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

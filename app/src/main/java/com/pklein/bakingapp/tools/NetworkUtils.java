@@ -15,11 +15,7 @@ import java.util.Scanner;
 public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
-
     private static final String BASE_LIST_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
-    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
-
-
 
     /**
      * Builds the URL used to get the baking.json
@@ -96,6 +92,4 @@ public class NetworkUtils {
         else
             return null;
     }
-
-
 }

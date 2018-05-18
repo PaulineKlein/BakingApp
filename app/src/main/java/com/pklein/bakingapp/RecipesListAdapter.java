@@ -2,8 +2,6 @@ package com.pklein.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pklein.bakingapp.data.recipe;
-import com.pklein.bakingapp.tools.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
 public class RecipesListAdapter  extends RecyclerView.Adapter<RecipesListAdapter.RecipesListAdapterViewHolder> {

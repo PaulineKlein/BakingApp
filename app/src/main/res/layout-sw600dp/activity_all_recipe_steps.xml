@@ -29,6 +29,7 @@
     <!-- The static All_steps_Fragment -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scroll_all_steps"
         android:layout_width="400dp"
         android:layout_height="match_parent"
         >

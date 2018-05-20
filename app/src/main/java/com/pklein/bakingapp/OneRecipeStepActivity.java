@@ -53,6 +53,10 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     private SimpleExoPlayer mExoPlayer;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
+    private boolean  mPlayVideoSate;
+    private long  mLastPosition;
+    final String PLAYVIDEO = "PlayVideoSate";
+    final String LASTPOSITION = "LastPlayPosition";
 
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
     @BindView(R.id.card_view)   CardView mCard_view;
@@ -70,6 +74,11 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
         ButterKnife.bind(this);
 
         Intent intentThatStarted = this.getIntent();
+
+        if (savedInstanceState != null) {
+            mLastPosition = savedInstanceState.getLong(LASTPOSITION, 0);
+            mPlayVideoSate = savedInstanceState.getBoolean(PLAYVIDEO);
+        }
 
         if(intentThatStarted.hasExtra("StepPos")) {
             mstepId = intentThatStarted.getIntExtra("StepPos",0);
@@ -173,7 +182,15 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
             String userAgent = Util.getUserAgent(this, "bakingapp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+
+            // Resume playing state and playing position
+            if (mLastPosition != 0) {
+                mExoPlayer.seekTo(mLastPosition);
+                mExoPlayer.setPlayWhenReady(mPlayVideoSate);
+            } else {
+                // Otherwise, if position is 0, the video never played and should start by default
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
@@ -255,7 +272,39 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
 
     /**
      * Release the player when the activity is destroyed.
+     * https://github.com/google/ExoPlayer/blob/release-v2/demos/main/src/main/java/com/google/android/exoplayer2/demo/PlayerActivity.java
      */
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        releasePlayer();
+        setIntent(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!mstep.getmVideoURL().equals("")){
+            initializeMediaSession(); // Initialize the Media Session.
+            initializePlayer(NetworkUtils.getvideoURI(mstep.getmVideoURL()));
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!mstep.getmVideoURL().equals("")){
+            initializeMediaSession(); // Initialize the Media Session.
+            initializePlayer(NetworkUtils.getvideoURI(mstep.getmVideoURL()));
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releasePlayer();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -264,7 +313,11 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
     @Override
     protected  void onPause(){
         super.onPause();
-        if(mExoPlayer!=null) {mExoPlayer.stop();}
+        if (mExoPlayer != null) {
+            mPlayVideoSate  = mExoPlayer.getPlayWhenReady();
+            mLastPosition  = mExoPlayer.getCurrentPosition();
+            releasePlayer();
+        }
     }
 
 
@@ -276,6 +329,24 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
         }
         if(mMediaSession!=null){
             mMediaSession.setActive(false);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(!mstep.getmVideoURL().equals("")){
+            outState.putBoolean(PLAYVIDEO,mPlayVideoSate );
+            outState.putLong(LASTPOSITION,mLastPosition );
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPlayVideoSate = savedInstanceState.getBoolean(PLAYVIDEO);
+            mLastPosition = savedInstanceState.getLong(LASTPOSITION);
         }
     }
 
@@ -303,6 +374,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                     startChildActivityIntent.putExtra("Recipe", mrecipe);
                 }
                 releasePlayer();
+                mLastPosition  = 0;
                 this.startActivity(startChildActivityIntent);
 
                 break;
@@ -316,6 +388,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                     startChildActivityIntent.putExtra("Recipe", mrecipe);
                 }
                 releasePlayer();
+                mLastPosition  = 0;
                 this.startActivity(startChildActivityIntent);
 
                 break;
@@ -327,6 +400,7 @@ public class OneRecipeStepActivity extends AppCompatActivity  implements View.On
                     startChildActivityIntent.putExtra("Recipe", mrecipe);
                 }
                 releasePlayer();
+                mLastPosition  = 0;
                 this.startActivity(startChildActivityIntent);
 
                 break;

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -52,11 +53,17 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     private SimpleExoPlayerView mPlayerView;
     private  TextView mtvTextDesc;
     private  ImageView mReplaceVideoImageIv;
+    private boolean  mPlayVideoSate;
+    private long  mLastPosition;
+    final String PLAYVIDEO = "PlayVideoSate";
+    final String LASTPOSITION = "LastPlayPosition";
 
     private int mSavedPosState = 0;
     private static final String LIFECYCLE_STEP_POS = "Step_Pos";
+    private static final String SCROLL_POSITION = "SCROLL_POSITION";
 
     @BindView(R.id.tv_ingredient_name) TextView mingredientNameTV;
+    @BindView(R.id.scroll_all_steps)    ScrollView mScrollSteps;
 
 
     @Override
@@ -101,6 +108,8 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
                     initializeStepView(0);
                 }
                 else{
+                    mLastPosition = savedInstanceState.getLong(LASTPOSITION, 0);
+                    mPlayVideoSate = savedInstanceState.getBoolean(PLAYVIDEO);
                     if (savedInstanceState.containsKey(LIFECYCLE_STEP_POS)) {
                         mSavedPosState = savedInstanceState.getInt(LIFECYCLE_STEP_POS);
                     }
@@ -123,6 +132,7 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
             this.startActivity(startChildActivityIntent);
         }else{
             releasePlayer();
+            mLastPosition  = 0;
             initializeStepView(StepPos);
         }
     }
@@ -155,17 +165,6 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(LIFECYCLE_STEP_POS, mSavedPosState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
     /**
      * Initialize ExoPlayer.
      * @param mediaUri The URI of the sample to play.
@@ -185,7 +184,15 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
             String userAgent = Util.getUserAgent(this, "bakingapp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+
+            // Resume playing state and playing position
+            if (mLastPosition != 0) {
+                mExoPlayer.seekTo(mLastPosition);
+                mExoPlayer.setPlayWhenReady(mPlayVideoSate);
+            } else {
+                // Otherwise, if position is 0, the video never played and should start by default
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
@@ -266,7 +273,74 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
 
     /**
      * Release the player when the activity is destroyed.
+     * https://github.com/google/ExoPlayer/blob/release-v2/demos/main/src/main/java/com/google/android/exoplayer2/demo/PlayerActivity.java
      */
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(LIFECYCLE_STEP_POS, mSavedPosState);
+        if(!mrecipe.getmStep().get(mSavedPosState).getmVideoURL().equals("")){
+            outState.putBoolean(PLAYVIDEO,mPlayVideoSate );
+            outState.putLong(LASTPOSITION,mLastPosition );
+        }
+
+        outState.putIntArray(SCROLL_POSITION,
+                new int[]{ mScrollSteps.getScrollX(), mScrollSteps.getScrollY()});
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPlayVideoSate = savedInstanceState.getBoolean(PLAYVIDEO);
+            mLastPosition = savedInstanceState.getLong(LASTPOSITION);
+        }
+
+        //with help of https://stackoverflow.com/questions/29208086/save-the-position-of-scrollview-when-the-orientation-changes?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+        final int[] position = savedInstanceState.getIntArray(SCROLL_POSITION);
+        if(position != null)
+            mScrollSteps.post(new Runnable() {
+                public void run() {
+                    mScrollSteps.scrollTo(position[0], position[1]);
+                }
+            });
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        releasePlayer();
+        setIntent(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mExoPlayer != null) {
+            if (!mrecipe.getmStep().get(mSavedPosState).getmVideoURL().equals("")) {
+                initializeMediaSession(); // Initialize the Media Session.
+                initializePlayer(NetworkUtils.getvideoURI(mrecipe.getmStep().get(mSavedPosState).getmVideoURL()));
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mExoPlayer != null) {
+            if (!mrecipe.getmStep().get(mSavedPosState).getmVideoURL().equals("")) {
+                initializeMediaSession(); // Initialize the Media Session.
+                initializePlayer(NetworkUtils.getvideoURI(mrecipe.getmStep().get(mSavedPosState).getmVideoURL()));
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releasePlayer();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -276,7 +350,11 @@ public class AllRecipeStepsActivity extends AppCompatActivity implements AllReci
     @Override
     protected  void onPause(){
         super.onPause();
-        if(mExoPlayer!=null) {mExoPlayer.stop();}
+        if (mExoPlayer != null) {
+            mPlayVideoSate  = mExoPlayer.getPlayWhenReady();
+            mLastPosition  = mExoPlayer.getCurrentPosition();
+            releasePlayer();
+        }
     }
 
     private void releasePlayer() {

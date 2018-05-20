@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else { // create a new layout to return to top of the screen
                     mLayoutManager= new GridLayoutManager(getApplicationContext(),numberOfColumns());
-                    mRecyclerView.setLayoutManager(mLayoutManager);
                 }
+                mRecyclerView.setLayoutManager(mLayoutManager);
+
                 showRecipeListView();
                 mRecipesListAdapter.setRecipesData(recipesData);
             } else {
